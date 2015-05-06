@@ -21,21 +21,7 @@ In both Jotto and Cinco, there is a secret word that the player is trying to dis
 			<th class="score" style="width: 2em;">In Place</th>
 		</tr>
 	</thead>
-	<tr id="guess2" class="guessrow" style="height: 12pt; vertical-align: bottom;">
-		<td style="width: 6ex; text-align: right;">1:&nbsp;</td>
-		<td class="try" style="width: 1em; font-family: Tahoma;">
-		<input id="i1-1" class="try" name="1" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="S"></td>
-		<td class="try" style="width: 1em; font-family: Tahoma;">
-		<input id="i1-2" class="try" name="H" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="H"></td>
-		<td class="try" style="width: 1em; font-family: Tahoma;">
-		<input id="i1-3" name="A" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="A"></td>
-		<td class="try" style="width: 1em; font-family: Tahoma;">
-		<input id="i1-4" class="try" name="R" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="R"></td>
-		<td class="try" style="width: 1em; font-family: Tahoma;">
-		<input id="i1-5" class="try" name="P" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="P"></td>
-		<td style="text-align: right;">3</td>
-		<td style="text-align: right;">1</td>
-	</tr>
+
 </table>
 
 
