@@ -41,7 +41,7 @@ The project goal is to create a game for popular handheld devices as a means of 
 
 <dt>Android</dt>
 
-<dd>Second largest market. Although Android devices worldwide outnumber iOS devices in absolute numbers, it's well known that iOS users buy more apps. In short -- Android users are cheap. (But see [Business Plan][1] below)</dd>
+<dd>Second largest market. Although Android devices worldwide outnumber iOS devices in absolute numbers, it's well known that iOS users buy more apps. In short -- Android users are cheap. (But see <a href="#business_plan">Business Plan</a> below)</dd>
 
 <dt>Windows</dt>
 
@@ -49,7 +49,7 @@ The project goal is to create a game for popular handheld devices as a means of 
 
 </dl>
 
-## [1]:Business Plan
+## <a name="Business_Plan">Business Plan</a>
 
 It's difficult to get people to pay even a dollar for an application, let alone an unknown game. However, free ad-supported games seem to do well. So it might take a few thousand add impressions to make a dollar. I'd be happy with $10 per day in revenue, since the primary purpose of this first game is as a learning exercise and perhaps to build up some name recognition.
 
