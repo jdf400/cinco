@@ -70,7 +70,7 @@ There is also good support for [Phone Gap in Microsoft Visual Studio 2013](http:
 
 ### Prototype
 
-A full working prototype has already been implemented and is available at [http://frankston.us/cinco](http://frankston.us/cinco). (Note -- I do not want to put the source code on Github, as that would make it publically available unless I purchased a private github account. But it's easy enough to use View Source to see the source code.)
+A full working prototype has already been implemented and is available at [http://frankston.us/cinco](http://frankston.us/cinco). 
 
 The web-based prototype has most of the features anticipated for the commercial version of the app, but it could use both appearance and usability improvements.
 
