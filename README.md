@@ -8,25 +8,36 @@ The origins of Cinco are obscure. It appears to be related to a word game [calle
 
 In both Jotto and Cinco, there is a secret word that the player is trying to discover. In Jotto the secret word can be five or six letters. In Cinco (as you might guess from the name), the secret word is always five letter. The player tries "guess" words with the same number of letters (i.e. five letters for Cinco). In Jotto, the player is told how many letters from the guess word exactly matched a letter in the secret word. An "exact" match means the letter from the guess word is in the same place as the secret word. So in Jotto, if the secret word is PEACH and the player guesses SHARP, the score for that guess would be 1\. In Cinco, there are two scores - one for matches in any position, and another for exact matches. So in Cinco if the secret word is PEACH, and the guess was SHARP, it would be would be scored as, 3 matches and 1 in place:
 
-<table id="guesstable" style='font:/normal "Times New Roman"; color: rgb(0, 0, 0); text-transform: none; text-indent: 0px; letter-spacing: normal; margin-left: 3ex; word-spacing: 0px; white-space: normal; widows: 1; -webkit-text-stroke-width: 0px;'>
-
-<thead>
-
-<tr class="guessrow" style="height: 12pt; font-size: xx-small; font-weight: normal; vertical-align: bottom;">
-
-<th>Guesses:</th>
-
-<th class="score" style="width: 2em;">Match</th>
-
-<th class="score" style="width: 2em;">In Place</th>
-
-</tr>
-
-</thead>
-
-<tbody>
-
+<table id="guesstable" style="margin-left: 3ex; color: rgb(0, 0, 0); font-family: 'Times New Roman'; font-size: medium; font-style: normal; font-variant: normal; font-weight: normal; letter-spacing: normal; line-height: normal; orphans: auto; text-align: start; text-indent: 0px; text-transform: none; white-space: normal; widows: 1; word-spacing: 0px; -webkit-text-stroke-width: 0px;">
+	<thead>
+		<tr class="guessrow" style="height: 12pt; vertical-align: bottom; font-size: xx-small; font-weight: normal;">
+			<th>Guesses:</th>
+			<th class="try" style="width: 1em; font-family: Tahoma;"></th>
+			<th class="try" style="width: 1em; font-family: Tahoma;"></th>
+			<th class="try" style="width: 1em; font-family: Tahoma;"></th>
+			<th class="try" style="width: 1em; font-family: Tahoma;"></th>
+			<th class="try" style="width: 1em; font-family: Tahoma;"></th>
+			<th class="score" style="width: 2em;">Match</th>
+			<th class="score" style="width: 2em;">In Place</th>
+		</tr>
+	</thead>
+	<tr id="guess2" class="guessrow" style="height: 12pt; vertical-align: bottom;">
+		<td style="width: 6ex; text-align: right;">1:&nbsp;</td>
+		<td class="try" style="width: 1em; font-family: Tahoma;">
+		<input id="i1-1" class="try" name="1" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="S"></td>
+		<td class="try" style="width: 1em; font-family: Tahoma;">
+		<input id="i1-2" class="try" name="H" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="H"></td>
+		<td class="try" style="width: 1em; font-family: Tahoma;">
+		<input id="i1-3" name="A" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="A"></td>
+		<td class="try" style="width: 1em; font-family: Tahoma;">
+		<input id="i1-4" class="try" name="R" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="R"></td>
+		<td class="try" style="width: 1em; font-family: Tahoma;">
+		<input id="i1-5" class="try" name="P" oninput="foc(this)" size="1" style="width: 1em; font-family: Tahoma; text-decoration: none; color: black; font-weight: normal;" value="P"></td>
+		<td style="text-align: right;">3</td>
+		<td style="text-align: right;">1</td>
+	</tr>
 </table>
+
 
 I like Cinco's method better, as it provides more information, and it takes fewer guesses. The game is still plenty hard enough.
 
