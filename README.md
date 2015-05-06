@@ -70,7 +70,8 @@ There is also good support for [Phone Gap in Microsoft Visual Studio 2013](http:
 
 ### Prototype
 
-A full working prototype has already been implemented and is available at [http://frankston.us/cinco](http://frankston.us/cinco). 
+A full working prototype has already been implemented and is available at [http://frankston.us/cinco](http://frankston.us/cinco). The html source and the dictionary file (5.js) is checked into this git repository,
+but I have deliberately not check-in the key source code file -- cinco.js, because I do want to make it public so I can retain my rights to the code. But it is not difficult to use View Source in your web browser to see this code.
 
 The web-based prototype has most of the features anticipated for the commercial version of the app, but it could use both appearance and usability improvements.
 
@@ -106,7 +107,7 @@ Otherwise, the implementation uses three or four files:
 
 <dt>cinco.js</dt>
 
-<dd>The Javscript code that implements  Cinco</dd>
+<dd>The Javscript code that implements  Cinco. (Not in the repository because I do not want to make it public.)/dd>
 
 <dt>index.htm</dt>
 
