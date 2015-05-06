@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta content="text/html; charset=windows-1252" http-equiv="Content-Type">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+<title>cinco</title>
+<script type="text/javascript" src="jquery-2.1.1.js" ></script>
+<script type="text/javascript" src="5.js"></script>
+<script type="text/javascript">
+
+	var guesses=0, won, lost, usedsmartguess, guessmemory = [];
+	var word,  alphabet = {'a': 0};
+	var numgames, numguesses, losses, wins, smartguesses;
+	var cookies;
+	var a = 'a'.charCodeAt(0);
+	var z = 'z'.charCodeAt(0);
+	$(document).ready(reset);
+
+	function reset()
+	{
+		$("#guesstable").find("tr:gt(1)").remove();
+		for (var i = 0; i != 5; i++)
+        {
+		    $("#guess1" + " td input:eq(" + i + ")").val("");
+   			setstyle($("#guess1" + " td input:eq(" + i + ")")[0], 0);
+		}
+		$("#guess1"+" td:eq(6)").text("");
+		$("#guess1"+" td:eq(7)").text("");
+
+		for (x = a; x<=z; x++) 
+		{
+		    var c = String.fromCharCode(x);
+		    alphabet[c] = 0;
+		}
+		updatealphabet();
+
+		guesses = 1;
+		won = false;
+		lost = false;
+		usedsmartguess = 0;
+		guessmemory = [];
+		$("#guess").prop('value', 'Guess');
+
+		word = words[randomindex()];
+		cookies = document.cookie.split(';');
+		numgames = 0, numguesses = 0, losses = 0, wins = 0;
+		try 
+		{
+			for (var i=0; i < cookies.length; i++)
+			{
+				eval(cookies[i]);
+			}
+		}
+		catch (err)
+		{
+		}
+		$(window).bind('beforeunload', function(){
+			if (guesses > 1 && !won) return 'Your game in progress will be lost if you leave now.';
+			}
+		);
+	}
+	
+	function setcookie()
+	{
+		document.cookie = "numgames=" + numgames;
+		document.cookie = "numguesses=" + numguesses;
+		document.cookie = "losses=" + losses;
+		document.cookie = "wins=" + wins;
+		document.cookie = "smartguesses=" + smartguesses;
+		document.cookie =  "expires = 1 Jan 2100 02:00:00";
+	}
+
+	
+	function giveup()
+	{
+		numgames++;
+		numguesses += guesses;
+		losses++;
+		smartguesses += usedsmartguess;
+		setcookie();
+		alert("The word is '" + word + "'");
+		lost = true;
+		$("#guess").prop('value', 'New Game');
+	}
+	
+	function randomguess()
+	{
+		var randguess = words[randomindex()];
+		for(var i=1; i!=6; i++) 
+		{
+			$('#i'+guesses+'-'+i).val(randguess.charAt(i-1));
+		}
+		makeguess();
+	}
+	
+	function randomindex()
+	{
+		return Math.floor(Math.random()*words.length);
+	}
+	
+	function testword(guess)
+	{
+		var inplace = 0;
+		var match = 0;
+		for(var i=0; i!=5; i++)
+		{
+			var g = guess.charAt(i);
+			for(var j=0; j!=5;j++)
+			{
+				if (g == word.charAt(j))
+				{
+					match++;
+					if (i == j) inplace++;
+				}
+			}
+		}
+		return {match: match, 
+				inplace: inplace};
+	}
+	
+	function automark(guess, result)
+	{
+		// automatically mark letters when obvious
+		// none or all
+		if (result.match==0 || result.match==5)
+		{
+			for (var i=0; i!=5; i++)
+			{
+				var c = guess.charAt(i);
+				alphabet[c] = result.match==0 ? 1: 2;
+				var letter = $("#" + c)[0];
+				setstyle(letter, alphabet[c]);
+			}
+			updateall();
+		}
+
+	}
+	
+	function makeguess()
+	{
+	    if (won || lost)
+	    {
+            // setup for new game
+	        reset();
+	        return;
+	    }
+
+	    if (lost) return;
+		var guess="";
+		for (var i = 0; i != 5; i++)
+        {
+		    var c = $("#guess" + guesses + " td input:eq(" + i + ")").val();
+		    guess += c.toLowerCase();
+		}
+		guessmemory.push(guess);
+		if(words.indexOf(guess)==-1) 
+		{
+			alert("I don't know: " + guess);
+			return;
+		}
+		
+		result = testword(guess);
+		automark(guess, result);
+		
+		$("#guess"+guesses+" td:eq(6)").text(result.match.toString());
+		$("#guess"+guesses+" td:eq(7)").text(result.inplace.toString());
+		
+		if (result.inplace == 5)
+		{
+			numgames++;
+			numguesses += guesses;
+			wins++;
+			smartguesses += usedsmartguess;
+			setcookie();
+			alert("You Win");
+			won = true;
+			$("#guess").prop('value', 'New Game');
+			return;
+		}
+		
+		$("#guess"+guesses).after( 
+		'<tr class="guessrow" id="guess'+(++guesses)+'">' +
+			'<td style="width: 6ex; text-align: right;">'+guesses+':&nbsp;</td>' +
+			'<td class="try"><input oninput ="foc(this)" id= "i'+guesses+'-1" class="try" size="1" /> </td>' + 
+			'<td class="try"><input oninput ="foc(this)" id= "i'+guesses+'-2" class="try" size="1" /> </td>' +
+			'<td class="try"><input oninput ="foc(this)" id= "i'+guesses+'-3" class="try" size="1" /> </td>' +
+			'<td class="try"><input oninput ="foc(this)" id= "i'+guesses+'-4" class="try" size="1" /> </td>' +
+			'<td class="try"><input oninput ="foc(this)" id= "i'+guesses+'-5" class="try" size="1" /> </td>' +
+			'<td style="text-align:right">&nbsp;</td>' +
+ 			'<td style="text-align:right">&nbsp;</td>' +
+		'</tr>');
+		updateall();
+		// set focus to first character of new guess
+		$('#'+guesses+'-'+1).focus();
+	}
+	
+	function smartguess()
+	{
+		var g="";
+		var good, bad;
+		var white = 0;
+		var check;
+		var rand = randomindex();
+		var orand = rand;
+		var direction = (rand/2 < words.length%2) ? -1 : 1;
+		for(var i=0; i!=5; i++)
+		{
+			 g += $("#guess"+guesses+" td input:eq("+i+")").val();
+			 check = $("#guess"+guesses+" td input:eq("+i+")").val();
+			 if (check == "")
+			 {
+			 	g += " ";
+			 	white ++;
+			 }
+		}
+		while(true)
+		{	
+			good = bad = 0;
+			var rword = words[rand];
+			for(var i=0; i!=5; i++)
+			{
+				var c = rword.charAt(i);
+				if (1==alphabet[c])
+				{
+					bad++;
+					break;
+				}
+				if (g.charAt(i) == c)
+				{
+					good++;
+				}
+			}
+			// The smartguess has to
+			//  - not be a word already guessed in this game
+			//  - not contain any characters marked off the grid
+			//  - match all the letters already filled in
+			if (-1 == guessmemory.indexOf(rword) && !bad && good == (5-white))
+			{
+				for (var i=1; i!=6; i++) 
+				{
+					$('#i'+guesses+'-'+i).val(rword.charAt(i-1));
+					setstyle($('#i'+guesses+'-'+i)[0], alphabet[rword.charAt(i-1)]);
+				}
+				usedsmartguess++;
+				makeguess();
+				break;
+			}
+			rand += direction;
+			if (rand == words.length || rand == 0)
+			{
+				if (orand == -1) break;
+				direction = -direction;
+				rand = orand;
+				orand = -1;
+			}
+		}
+	}
+	
+	// rescan words runs through all of our guesses
+	// looking for 0 and 5 scores so we can reset
+	// the alphabet properly
+	function rescanwords()
+	{
+		for (guess in guessmemory)
+		{
+			var result = testword(guessmemory[guess]);
+			automark(guessmemory[guess], result);
+		}
+	}
+
+
+	function clearalphabet()
+	{
+		for (x = a; x<=z; x++) alphabet[String.fromCharCode(x)] = 0;
+
+		rescanwords();
+		
+		updateall();
+		updatealphabet();
+
+	}
+	
+	function showstats()
+	{
+		alert("Number of games: " + numgames +
+			  "\nAverage guesses: " + Math.round((wins==0 ? 0 : numguesses/wins)*100)/100 +
+			  "\nTotal smart guesses: " + smartguesses + 
+			  "\nWins: " + wins +
+			  "\nLoses: " + losses );
+	}
+	
+	function foc(obj)
+	{
+		var x = obj.id.split("-")[0];
+		var y = obj.id.split("-")[1];
+		if (y<5)
+		{
+			y++;
+			if(obj.value.length == 1)
+			{
+				$('#'+x+'-'+y).focus();
+			}
+		} 
+		else if(obj.value.length == 1) $('#guess').focus();
+		obj.value = obj.value.trim().charAt(0);
+		updateall();
+	}
+	
+	function setstyle(obj, state)
+	{
+		switch(state)
+		{
+			case 0:
+				norm(obj);
+				break;
+			
+			case 1:
+				strike(obj);
+				break;
+			
+			case 2:
+				mark(obj);
+				break;
+		}
+	}
+	
+	function change(obj)
+	{
+		//obj.innerHTML is the letter you clicked on
+		var c = obj.innerHTML.toLowerCase();
+		alphabet[c] = (alphabet[c] + 1) % 3;
+		setstyle(obj, alphabet[c]);
+		changeloop(c, alphabet[c]);
+	}
+	
+	function updatealphabet()
+	{
+		for (x = a; x<=z; x++)
+		{
+		    var c = String.fromCharCode(x);
+		    var letter = $("#" + c)[0];
+			setstyle(letter, alphabet[c]);
+		}
+	}
+	
+	function updateall()
+	{
+		for (x = a; x<=z; x++)
+		{
+		    var c = String.fromCharCode(x);
+		    var state = alphabet[c];
+		    changeloop(c, state);
+		}
+		
+	}
+	
+	function changeloop(c, state)
+	{
+		for (var i = 1; i<= guesses; i++)
+		{
+			for (var j = 1; j!=5+1; j++)
+			{
+				var guesschar = $('#i'+i+'-'+j).val();
+				if (guesschar == c)
+				{
+					setstyle($('#i'+i+'-'+j)[0], state);
+				}
+			}
+		}
+	}
+
+	function strike(obj)
+	{
+		obj.style.textDecoration = "line-through";
+		obj.style.color = "blue";
+		obj.style.fontWeight = 'normal';
+	}
+	function norm(obj)
+	{
+		obj.style.textDecoration = "none";
+		obj.style.color = "black";
+		obj.style.fontWeight = 'normal';
+	}
+	function mark(obj)
+	{
+		obj.style.textDecoration = "none";
+		obj.style.color = "red";
+		obj.style.fontWeight = 'bold';
+	}
+	
+	function encodeword(word)
+	{
+		var value = 0;
+		for (var i=0; i!=word.length; i++)
+		{
+			var c = word.charCodeAt(i) - 'a'.charCodeAt(0) + 1;
+			value += value * 27 + c;
+		}
+		return value;
+	}
+	
+	function unencode(value)
+	{	
+		var letters = ["", "", "", "", ""];
+		for (var i=0; i!=5; i++)
+		{	
+			var c = value%27;
+			var cc = c -1 + 'a'.charCodeAt(0);
+			letters[i] = String.fromCharCode(cc);
+			value = value/27;
+		}
+		return letters.join("");
+	}
+	
+	var vector = [];
+	function gshare()
+	{
+		vector = [];
+		for (guess in guessmemory)
+		{
+			vector.push(encodeword(guessmemory[guess]));
+		}
+		alert(vector.toString());
+	}
+	
+	function unshare()
+	{
+		var wordss = "";
+		for (v in vector)
+		{
+			wordss += unencode(vector[v]) + ",";
+		}
+		alert(wordss);
+	}
+
+</script>
+
+<style type="text/css">
+.try {
+	width: 1em;
+	font-family: Tahoma;
+}
+.score {
+	width: 2em;
+}
+.guessrow {
+	height: 12pt;
+	vertical-align: bottom;
+}
+.buttonsmall {
+	font-size: small;
+	font-family: "Arial Narrow";
+}
+</style>
+
+</head>
+
+<body>
+
+<table>
+	<tr>
+	<td style="vertical-align:top">
+		<table>
+			<tr>
+				<td colspan="3" style="text-align: center;">
+					<input style="font-weight:bold" id="guess" type="button" value="Guess" onclick ="makeguess()"/>
+					<button class="buttonsmall" id="share" onclick="unshare()">UnShare</button><br/>
+				</td>
+				<td>
+					<button class="buttonsmall" id="share" onclick="gshare()">Share</button><br/>
+				</td>
+	
+			</tr>
+			<tr>
+				<td>
+					<input class="buttonsmall" id="random" type="button" value="Random" onclick ="randomguess()"/>
+				</td>
+				<td>
+					<button class="buttonsmall" id="giveup" type="button" onclick="giveup()">Give Up</button>
+				</td>
+				<td>
+					<input class="buttonsmall" id="stats" type="button" value="Stats" onclick="showstats()"/>
+				</td>
+				<td>
+					<button class="buttonsmall" id="smartguess" onclick="smartguess()">Smart<br/>Guess</button>
+				</td>
+	
+			</tr>
+		</table>
+
+		<table id="guesstable">
+			<thead>
+				<tr class="guessrow" style="font-size: xx-small; font-weight: normal">
+					<th>Guesses:</th>
+					<th class="try"></th>
+					<th class="try"></th>
+					<th class="try"></th>
+					<th class="try"></th>
+					<th class="try"></th>
+					<th class="score">Match </th>
+					<th class="score">In Place </th>
+				</tr>
+			</thead>
+			<tr class="guessrow" id="guess1">
+				<td style="width: 6ex; text-align: right;">1:&nbsp;</td>
+				<td class="try">
+				<input oninput ="foc(this)" id="i1-1" class="try" size="1" />
+				</td>
+				<td class="try">
+				<input oninput ="foc(this)" id="i1-2" class="try" size="1" />
+				</td>
+				<td class="try">
+				<input oninput ="foc(this)" id="i1-3" class="try" size="1" />
+				</td>
+				<td class="try">
+				<input oninput ="foc(this)" id="i1-4" class="try" size="1" />
+				</td>
+				<td class="try">
+				<input oninput ="foc(this)" id="i1-5" class="try" size="1" />
+				</td>
+				<td style="text-align:right">&nbsp;</td>
+				<td style="text-align:right">&nbsp;</td>
+			</tr>
+		</table>
+	</td>
+	<td >
+		<table  style="border-right: 2px solid #C0C0C0; border-bottom: 2px solid #C0C0C0; margin-top:12pt; border-left-style: solid; border-left-width: 2px; border-top-style: solid; border-top-width: 2px; text-align: center;">
+			<tr>
+				<td colspan="2">
+					<input type="button" value="Clear" onclick="clearalphabet()" class="buttonsmall" />
+				</td>
+			</tr>
+			<tr>
+				<td id="a" onclick="change(this)">A</td>
+				<td id="b" onclick="change(this)">B</td>
+			</tr>
+			<tr>
+				<td id="c" onclick="change(this)">C</td>
+				<td id="d" onclick="change(this)">D</td>
+			</tr>
+			<tr>
+				<td id="e" onclick="change(this)">E</td>
+				<td id="f" onclick="change(this)">F</td>
+			</tr>
+			<tr>
+				<td id="g" onclick="change(this)">G</td>
+				<td id="h" onclick="change(this)">H</td>
+			</tr>
+			<tr>
+				<td id="i" onclick="change(this)">I</td>
+				<td id="j" onclick="change(this)">J</td>
+			</tr>
+			<tr>
+				<td id="k" onclick="change(this)">K</td>
+				<td id="l" onclick="change(this)">L</td>
+			</tr>
+			<tr>
+				<td id="m" onclick="change(this)">M</td>
+				<td id="n" onclick="change(this)">N</td>
+			</tr>
+			<tr>
+				<td id="o" onclick="change(this)">O</td>
+				<td id="p" onclick="change(this)">P</td>
+			</tr>
+			<tr>
+				<td id="q" onclick="change(this)">Q</td>
+				<td id="r" onclick="change(this)">R</td>
+			</tr>
+			<tr>
+				<td id="s" onclick="change(this)">S</td>
+				<td id="t" onclick="change(this)">T</td>
+			</tr>
+			<tr>
+				<td id="u" onclick="change(this)">U</td>
+				<td id="v" onclick="change(this)">V</td>
+			</tr>
+			<tr>
+				<td id="w" onclick="change(this)">W</td>
+				<td id="x" onclick="change(this)">X</td>
+			</tr>
+			<tr>
+				<td id="y" onclick="change(this)">Y</td>
+				<td id="z" onclick="change(this)">Z</td>
+			</tr>
+		</table>
+	</td>
+	</tr>
+	<tr>
+		<td colspan="2" style="width:3in; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: small;">
+		How to play: I have a mystery five letter word. You try and guess the word. 
+For each guess I will let you know the number of letters you have that match
+and how many are in the correct<br>spot. Enjoy!
+</td>
+	</tr>
+</table>
+
+
+</body>
+
+
+</html>
